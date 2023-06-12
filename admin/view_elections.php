@@ -41,16 +41,17 @@
         <div class="container-fluid">
             <form action="" method="POST" enctype="multipart/form-data">
 	            <table class="table table-bordered table-hover table-fixed">
-		    			<thead  style="background-color:rgb(48,60,84);color:white;" >
-			    			<tr>							
-                                <th width="100px">SL.No</th>
-					    		<th width="150px">Election Name</th>
-						    	<th width="250px">Degree Name | Branch Name</th>
-                                <th width="100px">Election Date</th>
-							    <th width="200px">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <thead  style="background-color:rgb(48,60,84);color:white;" >
+                  <tr>							
+                    <th width="100px">SL.No</th>
+                    <th width="150px">Election Name</th>
+                    <th width="300px">Degree Name | Branch Name | Year</th>
+                    <th width="250px">Registration Start | End Date </th>
+                    <th width="150px">Election Date</th>
+                    <th width="200px">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
                         <?php
                             $statement = $con->prepare($filter);
                             $statement->execute();
@@ -68,8 +69,9 @@
                         ?>
                             <tr>
                                 <td><?php echo $i++; ?></td>
-                                <td><?php echo $row['election_name']; ?></td>
-                                <td><?php echo $result_degree['degree_name']." | ".$result_branch['branch_name']; ?></td>
+                                <td><a  style="text-decoration:none;color:black;"href="contestent_list.php?reference_no=<?php echo md5($row['election_id']); ?>"><?php echo $row['election_name']; ?></a></td>
+                                <td><?php echo $result_degree['degree_name']." | ".$result_branch['branch_name']." | ".$row['eligible_year']; ?></td>
+                                <td><?php echo $row['start_registration_date']." | ".$row['end_registration_date']?></td>
                                 <td><?php echo $row['election_date']; ?></td>
                                 <td>
                                     <a href="edit_election.php?reference_no=<?php echo md5($row['election_id']); ?>" class="btn btn-success">Edit</a>
@@ -78,8 +80,8 @@
                             </tr>
 
                         <?php  } ?>
-                        </tbody>
-                </table>
+                </tbody>
+              </table>
             </form>
         </div>
 

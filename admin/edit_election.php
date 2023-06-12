@@ -32,14 +32,25 @@
     $etime=$_POST['etime'];
     $edegree=$_POST['edegree'];
     $ebranch=$_POST['ebranch'];
+    $eyear=$_POST['eyear'];
+    $ersdate=$_POST['ersdate'];
+    $eredate=$_POST['eredate'];
+    $erstime=$_POST['erstime'];
+    $eretime=$_POST['eretime'];
+
   
-    if($result_election['election_name']!=strtoupper($ename) OR $result_election['election_roles_responsibility']!=$role OR $result_election['election_date']!=$edate OR $result_election['election_start_time']!=$stime OR $result_election['election_end_time']!=$etime OR $result_election['degree_id']!=$edegree OR $result_election['branch_id']!=$ebranch){
+    if($result_election['election_name']!=strtoupper($ename) OR $result_election['election_roles_responsibility']!=$role OR $result_election['election_date']!=$edate OR $result_election['election_start_time']!=$stime OR $result_election['election_end_time']!=$etime OR $result_election['degree_id']!=$edegree OR $result_election['branch_id']!=$ebranch OR $result_election['eligible_yaer']!=$eyear OR $result_election['start_registration_date']!=$ersdate OR $result_election['end_registration_date']!=$eredate OR $result_election['start_registration_time']!=$erstime OR $result_election['end_registration_time']!=$eretime){
+
         if($stime != $etime){
-            $statement = $con->prepare("UPDATE election_info SET election_name = ?, election_roles_responsibility = ?,degree_id=?,branch_id=?,election_date=?,election_start_time=?,election_end_time=? WHERE election_id=?");
-            $statement->execute(array($ename,$role,$edegree,$ebranch,$edate,$stime,$etime,$result_election['election_id']));
-            
-            echo "<script>alert(' ".$ename." election has been updated to be conducted on ".$edate." at ".$stime." to ".$etime." for ".$row_degree['degree_name']." ( ".$row_branch['branch_name']." ) ')</script>";
-  
+
+            if($edate>$eredate){
+
+                $statement = $con->prepare("UPDATE election_info SET election_name = ?, election_roles_responsibility = ?,degree_id=?,branch_id=?,election_date=?,election_start_time=?,election_end_time=?,eligible_year=?,start_registration_date=?,end_registration_date=?,start_registration_time=?,end_registration_time=? WHERE election_id=?");
+                $statement->execute(array($ename,$role,$edegree,$ebranch,$edate,$stime,$etime,$eyear,$ersdate,$eredate,$erstime,$eretime,$result_election['election_id']));
+                
+                echo "<script>alert(' ".$ename." election has been updated to be conducted on ".$edate." at ".$stime." to ".$etime." for ".$row_degree['degree_name']." ( ".$row_branch['branch_name']." ) ')</script>";
+                
+            }  
 
         }else{
             echo "<script>alert(' Start time and End time cannot be same ')</script>";
@@ -66,6 +77,7 @@
     <div class="container-form">
         <form action="" method="POST" class="form" enctype="multipart/form-data">
                 <div class="row">
+                    <label for="election stime" style="margin-left:25%;"><<<<< Basic Details >>>>></label><br>
                     <div class="col-md">
                         <div class="form name">
                             <label for="election name"><span class="required">* </span>Election Name :</label><br>
@@ -83,9 +95,43 @@
                 </div>
 
                 <div class="row">
+                    <label for="election stime" style="margin-left:25%;"><<<<< Registration Details >>>>></label><br>
+                    <div class="col-sm">
+                        <div class="form stime">
+                            <label for="election stime"><span class="required">* </span>Start Date :</label><br>
+                            <input type="date" name="ersdate" value="<?php echo $result_election['start_registration_date']; ?>" required>
+                        </div>
+                    </div>
+
                     <div class="col-sm">
                         <div class="form date">
-                            <label for="election date"><span class="required">* </span>Date :</label><br>
+                            <label for="election time"><span class="required">* </span>End Date :</label><br>
+                            <input type="date" name="eredate" value="<?php echo $result_election['end_registration_date']; ?>" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="form stime">
+                            <label for="election stime"><span class="required">* </span>Start Time :</label><br>
+                            <input type="time" name="erstime" value="<?php echo $result_election['start_registration_time']; ?>" required>
+                        </div>
+                    </div>
+
+                    <div class="col-sm">
+                        <div class="form date">
+                            <label for="election time"><span class="required">* </span>End Time :</label><br>
+                            <input type="time" name="eretime" value="<?php echo $result_election['end_registration_time']; ?>" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="election stime" style="margin-left:25%;"><<<<< Schedule Details >>>>></label><br>
+                    <div class="col-sm">
+                        <div class="form date">
+                            <label for="election date"><span class="required">* </span>Election Date :</label><br>
                             <input type="date" name="edate" value="<?php echo $result_election['election_date']; ?>" required>
                         </div>
                     </div>
@@ -108,6 +154,7 @@
                 </div>
 
                 <div class="row">
+                    <label for="election stime" style="margin-left:25%;"><<<<< Elligibility >>>>></label><br>
                     <div class="col-md">
                         <div class="form degree">
                            <label for="election degree"><span class="required">* </span>Elligible Degree :</label><br>
@@ -121,6 +168,28 @@
                             <label for="election branch"><span class="required">* </span>Elligible Branches :</label><br>
                             <select name="ebranch" id="state" required>
                                 <option value="<?php echo $result_election['branch_id']; ?>"><?php echo $row_branch['branch_name']; ?></option>   
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md">
+                        <div class="form branch">
+                            <label for="election sem"><span class="required">* </span>Elligible Year :</label><br>
+                            <select name="eyear"  required>
+                                <?php 
+                                    if($result_election['eligible_year']==999)
+                                        $temp="All Semesters";
+                                    else
+                                        $temp=$result_election['eligible_year'];    
+                                ?>  
+                                <option value="<?php echo $result_election['eligible_year']; ?>"><?php echo $temp; ?></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="999">All Semesters</option>   
                             </select>
                         </div>
                     </div>
