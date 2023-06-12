@@ -1,0 +1,93 @@
+.container-form {
+    background: white;
+    width:calc(100%- 10px * 2);
+    margin-left:20px;
+}
+
+.form {
+    padding-left: 20px;
+    padding-top:20px;
+    padding-right:20px;
+    padding-bottom:20px;
+}
+
+label {
+    font-weight: bold;
+    font-size:18px;
+}
+
+.form input{
+    margin-left:20px;
+    margin-top:10px;
+    border-radius:20px 0 20px 0;
+    padding-left:10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border:2px solid rgba(48,60,84);
+}
+
+.form textarea {
+    margin-left:20px;
+    margin-top:10px;
+    padding-left:10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius:20px 0 20px 0;
+    border:2px solid rgba(48,60,84);
+}
+
+.form select {
+    margin-left:20px;
+    margin-top:10px;
+    padding-left:10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius:20px 0 20px 0;
+    border:2px solid rgba(48,60,84);
+}
+
+.form.capcha .ecapcha {
+    border-radius:0;
+    background:rgba(48,60,84);
+    font-weight: bold;
+    font-size: 20px;
+    width:100px;
+    color:white;
+    letter-spacing: .5rem;
+}
+
+.form.capcha input {
+    top:-20px;
+}
+
+.required {
+    color:red;
+}
+
+.form.submit .message_display {
+    font-size: 24px;
+    margin-top:-20px;
+}
+
+.form.submit .error_display {
+    color:red;
+}
+
+.form.submit .success_display {
+    color:rgba(75,184,51);
+}
+
+.form.submit input {
+    padding-left:20px;
+    padding-right: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background: rgba(75,184,51);
+    margin-left:0;
+    border-radius: 20px 20px 20px 20px;
+    font-size:24px;
+    border: none;
+}
