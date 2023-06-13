@@ -37,6 +37,14 @@
     $eredate=$_POST['eredate'];
     $erstime=$_POST['erstime'];
     $eretime=$_POST['eretime'];
+    $adegree=$_POST['adegree'];
+    $abranch=$_POST['abranch'];
+
+    if($adegree==1)
+        $edegree=9999;
+
+    if($abranch==1)
+        $ebranch=9999;
 
   
     if($result_election['election_name']!=strtoupper($ename) OR $result_election['election_roles_responsibility']!=$role OR $result_election['election_date']!=$edate OR $result_election['election_start_time']!=$stime OR $result_election['election_end_time']!=$etime OR $result_election['degree_id']!=$edegree OR $result_election['branch_id']!=$ebranch OR $result_election['eligible_yaer']!=$eyear OR $result_election['start_registration_date']!=$ersdate OR $result_election['end_registration_date']!=$eredate OR $result_election['start_registration_time']!=$erstime OR $result_election['end_registration_time']!=$eretime){
@@ -45,8 +53,8 @@
 
             if($edate>$eredate){
 
-                $statement = $con->prepare("UPDATE election_info SET election_name = ?, election_roles_responsibility = ?,degree_id=?,branch_id=?,election_date=?,election_start_time=?,election_end_time=?,eligible_year=?,start_registration_date=?,end_registration_date=?,start_registration_time=?,end_registration_time=? WHERE election_id=?");
-                $statement->execute(array($ename,$role,$edegree,$ebranch,$edate,$stime,$etime,$eyear,$ersdate,$eredate,$erstime,$eretime,$result_election['election_id']));
+                $statement = $con->prepare("UPDATE election_info SET election_name = ?, election_roles_responsibility = ?,degree_id=?,branch_id=?,election_date=?,election_start_time=?,election_end_time=?,eligible_year=?,start_registration_date=?,end_registration_date=?,start_registration_time=?,end_registration_time=?,all_degree=?,all_branch=? WHERE election_id=?");
+                $statement->execute(array($ename,$role,$edegree,$ebranch,$edate,$stime,$etime,$eyear,$ersdate,$eredate,$erstime,$eretime,$adegree,$abranch,$result_election['election_id']));
                 
                 echo "<script>alert(' ".$ename." election has been updated to be conducted on ".$edate." at ".$stime." to ".$etime." for ".$row_degree['degree_name']." ( ".$row_branch['branch_name']." ) ')</script>";
                 
@@ -58,6 +66,12 @@
     }
   }
 ?>
+
+<style type="text/css">
+    .edegree {
+            display:none;
+    }
+</style>
 
         <div class="container-fluid">
           <nav aria-label="breadcrumb">
@@ -155,19 +169,44 @@
 
                 <div class="row">
                     <label for="election stime" style="margin-left:25%;"><<<<< Elligibility >>>>></label><br>
+                    
                     <div class="col-md">
                         <div class="form degree">
-                           <label for="election degree"><span class="required">* </span>Elligible Degree :</label><br>
-                            <select name="edegree" id="country"  required>
-                                 <option value="<?php echo $result_election['degree_id']; ?>"><?php echo $row_degree['degree_name']; ?></option>
+                           <label for="election degree"><span class="required">* </span>All Degree :</label><br>
+                            <select name="adegree" id="adegree" onchange="enabledegree(this)" required>
+                                 <option value="1">Yes</option>
+                                 <option value="0">No</option>
                             </select>
                        </div>
                     </div>
+
                     <div class="col-md">
-                        <div class="form branch">
+                        <div class="form degree edegree" id="edegree">
+                           <label for="election degree"><span class="required">* </span>Elligible Degree :</label><br>
+                            <select name="edegree" id="country" >
+                                 <option value="">Select any degree</option>
+                            </select>
+                       </div>
+                    </div>
+                         
+                </div>
+
+                <div class="row">
+                    <div class="col-md">
+                        <div class="form degree">
+                           <label for="election degree"><span class="required">* </span>All Branch :</label><br>
+                            <select name="abranch" onchange="enablebranch(this)"required>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                       </div>
+                    </div>   
+                    
+                    <div class="col-md">
+                        <div class="form branch edegree" id="ebranch">
                             <label for="election branch"><span class="required">* </span>Elligible Branches :</label><br>
-                            <select name="ebranch" id="state" required>
-                                <option value="<?php echo $result_election['branch_id']; ?>"><?php echo $row_branch['branch_name']; ?></option>   
+                            <select name="ebranch" id="state" >
+                                <option value="">Select any branch</option>   
                             </select>
                         </div>
                     </div>
@@ -189,7 +228,7 @@
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                                 <option value="4">4</option>
-                                <option value="999">All Semesters</option>   
+                                <option value="9999">All Years</option>   
                             </select>
                         </div>
                     </div>
@@ -208,6 +247,25 @@
 
 <script src="js/jquery.js"></script>
 <script type="text/javascript">
+
+    function enabledegree(answer) {
+        console.log(answer.value);
+        if(answer.value == 0){
+            document.getElementById('edegree').classList.remove('edegree');
+        }else{
+            document.getElementById('edegree').classList.add('edegree');
+        }
+    };
+
+    function enablebranch(answer) {
+        console.log(answer.value);
+        if(answer.value == 0){
+            document.getElementById('ebranch').classList.remove('edegree');
+        }else{
+            document.getElementById('ebranch').classList.add('edegree');
+        }
+    };
+
   $(document).ready(function(){
   	function loadData(type, category_id){
   		$.ajax({

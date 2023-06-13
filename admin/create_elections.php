@@ -16,6 +16,14 @@
         $eredate=$_POST['eredate'];
         $erstime=$_POST['erstime'];
         $eretime=$_POST['eretime'];
+        $adegree=$_POST['adegree'];
+        $abranch=$_POST['abranch'];
+
+        if($adegree==1)
+            $edegree=9999;
+
+        if($abranch==1)
+            $ebranch=9999;
 
         $statement = $con->prepare("SELECT * FROM degree_info WHERE degree_id=? ");
         $statement->execute(array($edegree));
@@ -37,8 +45,8 @@
             if($total==0){
 
                 if($edate>$eredate){
-                    $statement = $con->prepare("INSERT INTO election_info(election_name,election_roles_responsibility,degree_id,branch_id,election_date,election_start_time,election_end_time,eligible_year,start_registration_date,end_registration_date,start_registration_time,end_registration_time) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
-                    $statement->execute(array($ename,$role,$edegree,$ebranch,$edate,$stime,$etime,$eyear,$ersdate,$eredate,$erstime,$eretime));      
+                    $statement = $con->prepare("INSERT INTO election_info(election_name,election_roles_responsibility,degree_id,branch_id,election_date,election_start_time,election_end_time,eligible_year,start_registration_date,end_registration_date,start_registration_time,end_registration_time,all_degree,all_branch) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $statement->execute(array($ename,$role,$edegree,$ebranch,$edate,$stime,$etime,$eyear,$ersdate,$eredate,$erstime,$eretime,$adegree,$abranch));      
                     
                     echo "<script>alert('<<<<< ".$ename." Elections >>>>> Elligible Degree : ".$row_degree['degree_name']." (".$eyear."|".$row['branch_name'].")<br>Registration date :".$ersdate." to ".$eredate." till ".$eretime."<br> Election Date :".$edate." from ".$stime." to ".$etime." ')</script>";
         
@@ -59,10 +67,25 @@
 
     }
 
+    if(isset($_POST['adegree'])){
+        if($_POST['adegree']==0){
+            $hide="";
+        }
+
+    }else{
+        $hide="hidden";
+    }
+
   
 
  
 ?>
+
+<style type="text/css">
+    .edegree {
+            display:none;
+    }
+</style>
         <div class="container-fluid">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb my-0 ms-2">
@@ -158,18 +181,43 @@
 
                 <div class="row">
                     <label for="election stime" style="margin-left:25%;"><<<<< Elligibility >>>>></label><br>
+                    
                     <div class="col-md">
                         <div class="form degree">
+                           <label for="election degree"><span class="required">* </span>All Degree :</label><br>
+                            <select name="adegree" id="adegree" onchange="enabledegree(this)" required>
+                                 <option value="1">Yes</option>
+                                 <option value="0">No</option>
+                            </select>
+                       </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form degree edegree" id="edegree">
                            <label for="election degree"><span class="required">* </span>Elligible Degree :</label><br>
-                            <select name="edegree" id="country" required>
+                            <select name="edegree" id="country" >
                                  <option value="">Select any degree</option>
                             </select>
                        </div>
                     </div>
+                         
+                </div>
+
+                <div class="row">
                     <div class="col-md">
-                        <div class="form branch">
+                        <div class="form degree">
+                           <label for="election degree"><span class="required">* </span>All Branch :</label><br>
+                            <select name="abranch" onchange="enablebranch(this)"required>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                       </div>
+                    </div>   
+                    
+                    <div class="col-md">
+                        <div class="form branch edegree" id="ebranch">
                             <label for="election branch"><span class="required">* </span>Elligible Branches :</label><br>
-                            <select name="ebranch" id="state" required>
+                            <select name="ebranch" id="state" >
                                 <option value="">Select any branch</option>   
                             </select>
                         </div>
@@ -186,7 +234,7 @@
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                                 <option value="4">4</option>
-                                <option value="999">All Semesters</option>   
+                                <option value="9999">All Years</option>   
                             </select>
                         </div>
                     </div>
@@ -205,6 +253,26 @@
 
 <script src="js/jquery.js"></script>
 <script type="text/javascript">
+
+    function enabledegree(answer) {
+        console.log(answer.value);
+        if(answer.value == 0){
+            document.getElementById('edegree').classList.remove('edegree');
+        }else{
+            document.getElementById('edegree').classList.add('edegree');
+        }
+    };
+
+    function enablebranch(answer) {
+        console.log(answer.value);
+        if(answer.value == 0){
+            document.getElementById('ebranch').classList.remove('edegree');
+        }else{
+            document.getElementById('ebranch').classList.add('edegree');
+        }
+    };
+
+
   $(document).ready(function(){
   	function loadData(type, category_id){
   		$.ajax({
