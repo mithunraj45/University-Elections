@@ -41,7 +41,7 @@ if (!isset($_SESSION['user'])) {
     <!-- Main styles for this application-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link href="css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/cascade_sheet.css">
+    <link rel="stylesheet" href="css/cas_sheet.css">
 
 
 
@@ -71,14 +71,6 @@ if (!isset($_SESSION['user'])) {
         <span class="nav-icon">University Elections</span>
       </div>
       <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
-        <li class="nav-item">
-          <a class="nav-link" href="index.php">
-          <svg class="nav-icon">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-home"></use>
-            </svg> 
-           Dashboard
-          </a>
-        </li>
 
         <li class="nav-group">
           <a class="nav-link nav-group-toggle" href="#">
@@ -112,49 +104,17 @@ if (!isset($_SESSION['user'])) {
 
 
         
-        <li class="nav-item"><a class="nav-link" href="department.php">
+        <li class="nav-item"><a class="nav-link" href="load_student.php">
             <svg class="nav-icon">
               <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-bank"></use>
-            </svg> Load Data</a>
+            </svg> Student Data</a>
         </li>
 
-        <li class="nav-item"><a class="nav-link" href="notification.php">
+        <li class="nav-item"><a class="nav-link" href="add_data.php">
             <svg class="nav-icon">
               <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-bell"></use>
-            </svg> Request</a>
+            </svg> Details</a>
         </li>
-
-
-        <li class="nav-item"><a class="nav-link" href="stores.php">
-            <svg class="nav-icon">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-spa"></use>
-            </svg> Stores</a>
-        </li>
-
-        <li class="nav-item"><a class="nav-link" href="suppliers.php">
-            <svg class="nav-icon">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-tags"></use>
-            </svg> Suppliers</a>
-        </li>
-
-        <li class="nav-item"><a class="nav-link" href="report_status.php">
-            <svg class="nav-icon">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-note-add"></use>
-            </svg> Report</a>
-        </li>
-
-        <li class="nav-item"><a class="nav-link" href="accounts.php">
-            <svg class="nav-icon">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
-            </svg> Accounts</a>
-        </li>
-
-        <li class="nav-item"><a class="nav-link" href="website_settings.php">
-            <svg class="nav-icon">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
-            </svg> Website Settings</a>
-        </li>
-
       </ul>
       <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
     </div>
@@ -171,20 +131,20 @@ if (!isset($_SESSION['user'])) {
               <use xlink:href="assets/brand/coreui.svg#full"></use>
             </svg></a>
           <ul class="header-nav d-none d-md-flex">
-            <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="report_status.php">Reports</a></li>
-            <li class="nav-item"><a class="nav-link" href="accounts.php">Accounts</a></li>
+            <li class="nav-item"><a class="nav-link" href="view_elections.php">Elections</a></li>
+            <li class="nav-item"><a class="nav-link" href="load_student.php">Students</a></li>
+            <li class="nav-item"><a class="nav-link" href="add_data.php">Details</a></li>
           </ul>
           <ul class="header-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="department.php">
+            <li class="nav-item"><a class="nav-link" href="view_elections.php">
                 <svg class="icon icon-lg">
                   <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-bank"></use>
                 </svg></a></li>
-            <li class="nav-item"><a class="nav-link" href="stores.php">
+            <li class="nav-item"><a class="nav-link" href="load_student.php">
                 <svg class="icon icon-lg">
                   <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-spa"></use>
                 </svg></a></li>
-            <li class="nav-item"><a class="nav-link" href="suppliers.php">
+            <li class="nav-item"><a class="nav-link" href="add_data.php">
                 <svg class="icon icon-lg">
                   <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-tags"></use>
                 </svg></a></li>

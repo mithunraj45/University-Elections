@@ -3,12 +3,10 @@
   require_once("../Database/connection.php");
   connect_db();
 
-  if(isset($_POST['edate'])){
-    $edate=$_POST['edate'];
-    $filter="SELECT * FROM election_info WHERE election_date = '$edate'";
-  }else{
-    $filter="SELECT * FROM election_info";
-  }
+  $today=date("Y-m-d");
+  $time=date("H:i:s");
+
+
 
   if(isset($_POST['delete_election'])){
 
@@ -28,13 +26,8 @@
               <li class="breadcrumb-item active"><span>View Elections</span></li>
             </ol>
           </nav>
-
-          <form action="" method="POST" enctype="multipart/form-data">
-                <input type="date" name="edate" onchange="this.form.submit()">
-                <a  style="margin-left:20px;" href="create_elections.php" class="btn btn-success">Create Election</a>
-          </form>
-
-        
+          <h4><span style="color:yellow;">Yellow</span>: Represents Voluteers List</h4>
+          <a  style="margin-left:20px;" href="create_elections.php" class="btn btn-success">Create Election</a>
         </div>
     </header>
 
@@ -42,37 +35,80 @@
             <form action="" method="POST" enctype="multipart/form-data">
 	            <table class="table table-bordered table-hover table-fixed">
                 <thead  style="background-color:rgb(48,60,84);color:white;" >
-                  <tr>							
+                  <tr align="center">							
                     <th width="100px">SL.No</th>
                     <th width="150px">Election Name</th>
-                    <th width="300px">Degree Name | Branch Name | Year</th>
-                    <th width="250px">Registration Start | End Date </th>
-                    <th width="150px">Election Date</th>
+                    <th width="250px">Total Eligible Students</th>
+                    <th width="250px">Registered Students</th>
+                    <th width="150px">Status</th>
                     <th width="200px">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                         <?php
-                            $statement = $con->prepare($filter);
+                            $statement = $con->prepare("SELECT * FROM election_info");
                             $statement->execute();
                             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
                             $i=1;
                             foreach ($result as $row) {
 
-                            $statement = $con->prepare("SELECT * FROM  degree_info WHERE degree_id =? ");
-                            $statement->execute(array($row['degree_id']));
-                            $result_degree = $statement->fetch(PDO::FETCH_ASSOC);
 
-                            $statement = $con->prepare("SELECT * FROM  branch_info WHERE branch_id =? ");
-                            $statement->execute(array($row['branch_id']));
-                            $result_branch = $statement->fetch(PDO::FETCH_ASSOC);
                         ?>
-                            <tr>
+                            <tr align="center" style="background:<?php if($row['voting']==0) echo "yellow";?>">
+                                
                                 <td><?php echo $i++; ?></td>
+                                
                                 <td><a  style="text-decoration:none;color:black;"href="contestent_list.php?reference_no=<?php echo md5($row['election_id']); ?>"><?php echo $row['election_name']; ?></a></td>
-                                <td><?php echo $result_degree['degree_name']." | ".$result_branch['branch_name']." | ".$row['eligible_year']; ?></td>
-                                <td><?php echo $row['start_registration_date']." | ".$row['end_registration_date']?></td>
-                                <td><?php echo $row['election_date']; ?></td>
+                                
+                                <?php 
+
+                                  if($row['all_degree']==1 && $row['all_branch']==1){
+                                    $filter="SELECT COUNT(register_no) AS total_count FROM student_info";
+                                  }else if($row['all_degree']==0 && $row['all_branch']==1){
+                                    $filter="SELECT COUNT(register_no) AS total_count FROM student_info WHERE degree_id=".$row['degree_id'].""; 
+                                  }else if($row['all_degree']==0 && $row['all_branch']==0){
+                                    $filter="SELECT COUNT(register_no) AS total_count FROM student_info WHERE degree_id=".$row['degree_id']." AND branch_id = ".$row['branch_id']." "; 
+                                  }
+
+                                  $statement = $con->prepare($filter);
+                                  $statement->execute();
+                                  $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+                                ?>
+                                <td><?php echo $result['total_count']; ?></td>
+                                
+                                <?php 
+                                    $statement = $con->prepare("SELECT COUNT(c.election_id) AS total_count FROM contesten_election_info AS c JOIN election_info AS e WHERE c.election_id=e.election_id AND c.election_id=".$row['election_id']." ");
+                                    $statement->execute();
+                                    $result = $statement->fetch(PDO::FETCH_ASSOC);
+                                ?>
+
+                                <td><?php echo $result['total_count']; ?></td>
+
+                                <?php 
+                                    $filter="";
+                                  if($today<$row['start_registration_date']){
+                                      $filter="Registration will begin soon";
+
+                                  }else if(($today<$row['end_registration_date'])OR($today==$row['end_registration_date'] && $time<$row['end_registration_time'])){
+                                    $filter="Registration In Progress";
+
+                                  }else if((($today>$row['end_registration_date']) OR ($today==$row['end_registration_date'] && $time>$row['end_registration_time'])) && $today<$row['election_date']){
+                                    $filter="Elections will begins soon";
+                                  }
+                                  else if(($today==$row['election_date'] && $time<$row['election_end_time'])){
+                                    $filter="Election Day";
+
+                                  }else if($today>$row['election_date']){
+                                    $filter="Elections are over";
+                                  
+                                  }
+
+                                ?>
+
+                                
+                                <td><?php echo $filter; ?></td>
+                                
                                 <td>
                                     <a href="edit_election.php?reference_no=<?php echo md5($row['election_id']); ?>" class="btn btn-success">Edit</a>
                                     <button type="submit" class="btn btn-danger" name="delete_election" value="<?php echo $row['election_id']; ?>">Delete</button>

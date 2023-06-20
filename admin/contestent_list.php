@@ -38,34 +38,127 @@
         </div>
     </header>
 
-    <div class="container-form">
-        <div class="row">
-          <div class="col-md">
-              <<<<< <?php echo $result_election['election_name']; ?> Elections >>>>><br>
-              Roles and Responsibilty : <?php echo $result_election['election_roles_responsibility']; ?><br>
-              Elligible Degree : <?php echo $row_degree['degree_name']; ?> | <?php echo $row_branch['branch_name']; ?> | <?php echo $result_election['eligible_year']; ?> <br>
-              Registration Date :<?php echo $result_election['start_registration_date']." , ".$result_election['start_registration_time']; ?> to <?php echo $result_election['end_registration_date']." , ".$result_election['end_registration_time']; ?> <br>
-              Election Date : <?php echo $result_election['election_date']; ?> <br>
-              Timings : <?php echo $result_election['election_start_time']; ?> to <?php echo $result_election['election_end_time']; ?>
+    <div class="container-fluid position-relative overflow-hidden mt-md-3 ml-md-3 " style="margin-left:20px;width:96%;background:white;height:300px;border-radius:20px 20px 20px 20px;">
+            <h3 class="text-center my-md-3" style="color:green;"><<<<< <?php echo $result_election['election_name']; ?> >>>>></h3>
+              
+              <div class="row" style="margin-left:10%;">
+                <div class="col-md-6 text-right ">
+                  <p class="h4">Roles and Responsibilty : </p>
+                </div>
+                <div class="col-md text-left">
+                  <p class="h4"><?php echo $result_election['election_roles_responsibility']; ?></p>
+                </div>
+              </div>
 
-          </div>
-          <div class="col-md">
-            <table class="table table-bordered table-hover table-fixed">
-                <thead  style="background-color:rgb(48,60,84);color:white;" >
-                  <tr>							
-                    <th width="100px">SL.No</th>
-                    <th width="250px">Student Name</th>
-                    <th>Degree</th>
-                    <th width="150px">Branch</th>
-                    <th width="250px">Year</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    <tr></tr>
-                </tbody>
-            </table>
-          </div>
-        </div>
-    </div>
+              <div class="row" style="margin-left:10%;">
+                <div class="col-md-6 text-right ">
+                  <p class="h4">Elligible Degree | Branch | Year : </p>
+                </div>
+                <div class="col-md text-left">
+                  <p class="h4"><?php echo $row_degree['degree_name']." | ".$row_branch['branch_name']." | ".$result_election['eligible_year']; ?></p>
+                </div>
+              </div>
+
+              <div class="row" style="margin-left:10%;">
+                <div class="col-md-6 text-right ">
+                  <p class="h4">Registration Date :</p>
+                </div>
+                <div class="col-md text-left">
+                  <p class="h4"><?php echo $result_election['start_registration_date']." to ".$result_election['end_registration_date']."(".$result_election['end_registration_time'].")"; ?></p>
+                </div>
+              </div>
+
+              <div class="row" style="margin-left:10%;">
+                <div class="col-md-6 text-right ">
+                  <p class="h4">Election Date : </p>
+                </div>
+                <div class="col-md text-left">
+                  <p class="h4"><?php echo $result_election['election_date']; ?></p>
+                </div>
+              </div>
+
+              <div class="row" style="margin-left:10%;">
+                <div class="col-md-6 text-right ">
+                  <p class="h4">Timings :</p>
+                </div>
+                <div class="col-md text-left">
+                  <p class="h4"><?php echo $result_election['election_start_time']." to ".$result_election['election_end_time']; ?></p>
+                </div>
+              </div>
+      </div>
+
+      <div class="container-fluid my-md-5" >
+                    <table class="table table-bordered table-hover table-fixed">
+                        <thead  style="background-color:rgb(48,60,84);color:white;" >
+                          <tr>							
+                              <th width="100px">SL.No</th>
+
+                              <?php if($result_election['voting']==1) {?>
+                                <th width="150px">Contestent Color</th>
+                              <?php } ?>
+
+                              <th width="300px">Contestent Name</th>
+                              <th width="250px">Degree | Branch |Year </th>
+
+                              <?php if($result_election['voting']==1) {?>
+                                <th width="80px">Votes</th>
+                              <?php } ?>
+                          </tr>
+
+                        </thead>    
+                        <tbody>
+                            <?php 
+                                $statement = $con->prepare("SELECT * FROM contesten_election_info WHERE election_id=? ORDER BY no_of_votes DESC ");
+                                $statement->execute(array($result_election['election_id']));
+                                $total=$statement->rowCount();
+                                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                                $i=1;
+                                if($total>0){
+                                foreach ($result as $row) {
+
+                                    $statement = $con->prepare("SELECT * FROM color_info WHERE color_id=? ");
+                                    $statement->execute(array($row['contestent_color']));
+                                    $result_color = $statement->fetch(PDO::FETCH_ASSOC);
+
+                                    $statement = $con->prepare("SELECT * FROM student_info WHERE register_no=? ");
+                                    $statement->execute(array($row['contesten_reg_no']));
+                                    $result_name = $statement->fetch(PDO::FETCH_ASSOC);
+
+                                    $statement = $con->prepare("SELECT * FROM degree_info WHERE degree_id=? ");
+                                    $statement->execute(array($result_name['degree_id']));
+                                    $row_name_degree = $statement->fetch(PDO::FETCH_ASSOC);
+                                
+                                    $statement = $con->prepare("SELECT * FROM branch_info WHERE branch_id=? ");
+                                    $statement->execute(array($result_name['branch_id']));
+                                    $row_name_branch = $statement->fetch(PDO::FETCH_ASSOC);
+
+                            ?>
+
+                                <tr>  
+                                    <td><?php echo $i++; ?></td>
+                                    
+                                    <?php if($result_election['voting']==1) {?>
+                                      <td align="center"><div style="margin-top:10px;width:50px;height:50px;background:<?php echo $result_color['color_name']; ?>;border-radius:50%;"></div></td>
+                                    <?php } ?>
+                                    
+                                    <td><?php echo $result_name['fname']; ?></td>
+                                    
+                                    <td><?php echo $row_name_degree['degree_name']." | ".$row_name_branch['branch_name']." | ".$result_name['year'];?></td>
+
+                                    <?php if($result_election['voting']==1) {?>
+                                      <td><?php echo $row['no_of_votes']; ?></td>
+                                    <?php } ?>
+                                </tr>
+
+                            <?php }}else{?>
+
+                                <tr>
+                                  <td colspan="5" align="Center"><?php echo "No data available. . ."; ?></td>
+                                </tr>
+
+                            <?php } ?>
+                        </tbody>
+                    </table>
+      </div>
 </div>
 <?php require_once("footer.php");?>

@@ -39,6 +39,7 @@
     $eretime=$_POST['eretime'];
     $adegree=$_POST['adegree'];
     $abranch=$_POST['abranch'];
+    $volunter=$_POST['volunter'];
 
     if($adegree==1)
         $edegree=9999;
@@ -53,8 +54,8 @@
 
             if($edate>$eredate){
 
-                $statement = $con->prepare("UPDATE election_info SET election_name = ?, election_roles_responsibility = ?,degree_id=?,branch_id=?,election_date=?,election_start_time=?,election_end_time=?,eligible_year=?,start_registration_date=?,end_registration_date=?,start_registration_time=?,end_registration_time=?,all_degree=?,all_branch=? WHERE election_id=?");
-                $statement->execute(array($ename,$role,$edegree,$ebranch,$edate,$stime,$etime,$eyear,$ersdate,$eredate,$erstime,$eretime,$adegree,$abranch,$result_election['election_id']));
+                $statement = $con->prepare("UPDATE election_info SET election_name = ?, election_roles_responsibility = ?,degree_id=?,branch_id=?,election_date=?,election_start_time=?,election_end_time=?,eligible_year=?,start_registration_date=?,end_registration_date=?,start_registration_time=?,end_registration_time=?,all_degree=?,all_branch=?,voting=? WHERE election_id=?");
+                $statement->execute(array($ename,$role,$edegree,$ebranch,$edate,$stime,$etime,$eyear,$ersdate,$eredate,$erstime,$eretime,$adegree,$abranch,$volunter,$result_election['election_id']));
                 
                 echo "<script>alert(' ".$ename." election has been updated to be conducted on ".$edate." at ".$stime." to ".$etime." for ".$row_degree['degree_name']." ( ".$row_branch['branch_name']." ) ')</script>";
                 
@@ -88,7 +89,7 @@
         </div>
     </header>
 
-    <div class="container-form">
+    <div class="container-form"  style="width:65%;margin-left:18%;border-radius:20px 20px 20px 20px;">
         <form action="" method="POST" class="form" enctype="multipart/form-data">
                 <div class="row">
                     <label for="election stime" style="margin-left:25%;"><<<<< Basic Details >>>>></label><br>
@@ -231,6 +232,17 @@
                                 <option value="9999">All Years</option>   
                             </select>
                         </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md">
+                        <input type="radio" name="volunter" value="0" required>
+                        <label for="election radio">Volunteer</label>
+                    </div>
+                    <div class="col-md">
+                        <input type="radio" name="volunter" value="1">
+                        <label for="election radio">Election</label>
                     </div>
                 </div>
 

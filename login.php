@@ -1,5 +1,5 @@
 <?php
-  require_once("../Database/connection.php");
+  require_once("Database/connection.php");
   connect_db();
   $error_message='';
   session_start(); 
@@ -13,15 +13,15 @@
         $email = strip_tags($_POST['email']);
         $password = strip_tags($_POST['password']);
       
-        $statement = $con->prepare("SELECT * FROM  login_info WHERE admin_email=? AND admin_status=?");
-        $statement->execute(array($email,1));
+        $statement = $con->prepare("SELECT * FROM  student_info WHERE email=?");
+        $statement->execute(array($email));
         $total = $statement->rowCount();    
           $result = $statement->fetch(PDO::FETCH_ASSOC);    
           if($total==0) {
               $error_message .= 'Email Address does not match<br>';
           } else {       
                 
-              $row_password = $result['admin_password'];
+              $row_password = $result['password'];
           
               if( $row_password != md5($password) ) {
                   $error_message .= 'Password does not match<br>';
@@ -29,7 +29,7 @@
               
                 $_SESSION['user'] = $result;
 
-                  header("location: view_elections.php");
+                  header("location: student.php");
 
               }
             }
@@ -42,7 +42,7 @@
 <html>
 
 <head>
-  <link rel="stylesheet" href="css/style_login.css">
+  <link rel="stylesheet" href="admin/css/style_login.css">
   <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">

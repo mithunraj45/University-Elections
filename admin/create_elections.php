@@ -18,6 +18,7 @@
         $eretime=$_POST['eretime'];
         $adegree=$_POST['adegree'];
         $abranch=$_POST['abranch'];
+        $volunteer=$_POST['volunter'];
 
         if($adegree==1)
             $edegree=9999;
@@ -45,8 +46,8 @@
             if($total==0){
 
                 if($edate>$eredate){
-                    $statement = $con->prepare("INSERT INTO election_info(election_name,election_roles_responsibility,degree_id,branch_id,election_date,election_start_time,election_end_time,eligible_year,start_registration_date,end_registration_date,start_registration_time,end_registration_time,all_degree,all_branch) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                    $statement->execute(array($ename,$role,$edegree,$ebranch,$edate,$stime,$etime,$eyear,$ersdate,$eredate,$erstime,$eretime,$adegree,$abranch));      
+                    $statement = $con->prepare("INSERT INTO election_info(election_name,election_roles_responsibility,degree_id,branch_id,election_date,election_start_time,election_end_time,eligible_year,start_registration_date,end_registration_date,start_registration_time,end_registration_time,all_degree,all_branch,voting) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $statement->execute(array($ename,$role,$edegree,$ebranch,$edate,$stime,$etime,$eyear,$ersdate,$eredate,$erstime,$eretime,$adegree,$abranch,$volunteer));      
                     
                     echo "<script>alert('<<<<< ".$ename." Elections >>>>> Elligible Degree : ".$row_degree['degree_name']." (".$eyear."|".$row['branch_name'].")<br>Registration date :".$ersdate." to ".$eredate." till ".$eretime."<br> Election Date :".$edate." from ".$stime." to ".$etime." ')</script>";
         
@@ -100,9 +101,9 @@
 
     </header>
 
-    <div class="container-form">
+    <div class="container-form" style="width:65%;margin-left:18%;border-radius:20px 20px 20px 20px;">
         <form action="" method="POST" class="form" enctype="multipart/form-data">
-                <div class="row">
+                <div class="row" style="width:100%;">
                     <label for="election stime" style="margin-left:25%;"><<<<< Basic Details >>>>></label><br>
                     <div class="col-md">
                         <div class="form name">
@@ -240,6 +241,16 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md">
+                        <input type="radio" name="volunter" value="0" required>
+                        <label for="election radio">Volunteer</label>
+                    </div>
+                    <div class="col-md">
+                        <input type="radio" name="volunter" value="1">
+                        <label for="election radio">Election</label>
+                    </div>
+                </div>
 
             <div class="form submit">
                 <input type="submit" value="Create" name="submit">
